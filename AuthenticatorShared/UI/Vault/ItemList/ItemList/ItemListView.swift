@@ -275,15 +275,22 @@ private struct SearchableItemListView: View { // swiftlint:disable:this type_bod
     private func groupView(title: String?, items: [ItemListItem]) -> some View {
         LazyVStack(alignment: .leading, spacing: 7) {
             if let title = title?.nilIfEmpty {
-                SectionHeaderView(title)
-            }
-            ForEach(items) { item in
-                if item.itemType == .syncError {
-                    Text(item.name)
-                        .styleGuide(.footnote)
-                } else {
-                    buildRow(item: item, isLastInSection: true)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                ExpandableHeaderView(title: title,
+                                     count: items.count) {
+                    ForEach(items) { item in
+                        buildRow(item: item, isLastInSection: true)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                    }
+                }
+            } else {
+                ForEach(items) { item in
+                    if item.itemType == .syncError {
+                        Text(item.name)
+                            .styleGuide(.footnote)
+                    } else {
+                        buildRow(item: item, isLastInSection: true)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                    }
                 }
             }
         }
